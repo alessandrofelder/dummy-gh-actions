@@ -27,4 +27,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Try to install libxerces on ubuntu
-        run: apt-get install libxerces-c3.2
+        run: sudo apt-get install libxerces-c3.2

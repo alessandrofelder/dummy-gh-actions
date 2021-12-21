@@ -5,20 +5,14 @@ name: CI
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  [push]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -26,5 +20,15 @@ jobs:
       - uses: actions/checkout@v2
 
       # Runs a single command using the runners shell
-      - name: Try to install libxerces on ubuntu
-        run: sudo apt-get install libxerces-c3.2
+      - name: Download, install and cache latest Fiji
+        run: |
+            curl -O https://downloads.imagej.net/fiji/latest/fiji-linux64.zip
+            unzip fiji-linux64.zip -d fiji
+            cd fiji/Fiji.app/
+            echo $GITHUB_WORKSPACE"/fiji/Fiji.app/" >> $GITHUB_PATH
+
+      - name: Test Fiji
+        run: ImageJ-linux64 --help
+
+
+

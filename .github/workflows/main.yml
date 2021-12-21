@@ -2,10 +2,10 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  [push]
+  [push, workflow_dispatch]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,16 +19,23 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Cache Fiji
+        uses: actions/cache@v2
+        id: fiji-cache
+        with:
+          path: fiji/Fiji.app
+          key: ${{ runner.os }}-fiji
+
       # Runs a single command using the runners shell
-      - name: Download, install and cache latest Fiji
+      - name: Download latest Fiji
+        if: steps.fiji-cache.outputs.cache-hit != 'true'
         run: |
-            curl -O https://downloads.imagej.net/fiji/latest/fiji-linux64.zip
-            unzip fiji-linux64.zip -d fiji
-            cd fiji/Fiji.app/
-            echo $GITHUB_WORKSPACE"/fiji/Fiji.app/" >> $GITHUB_PATH
+          curl -O https://downloads.imagej.net/fiji/latest/fiji-linux64.zip
+          unzip fiji-linux64.zip -d fiji
+          cd fiji/Fiji.app/
+
+      - name: Add Fiji to Path
+        run: echo $GITHUB_WORKSPACE"/fiji/Fiji.app/" >> $GITHUB_PATH
 
       - name: Test Fiji
-        run: ImageJ-linux64 --help
-
-
-
+        run: ImageJ-linux64

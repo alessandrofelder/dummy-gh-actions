@@ -1,0 +1,23 @@
+name: test Qt install on Mac
+
+on: [push]
+
+jobs:
+  build:
+    name: test Qt install
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
+      - name: Install MacOS dependencies
+        # MacOS already has libxml2 by default
+        if: matrix.platform == 'macos-latest'
+        shell: bash
+        run: |
+          brew install boost
+          curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/fdfc724dd532345f5c6cdf47dc43e99654e6a5fd/Formula/qt5.rb
+          brew install ./qt5.rb

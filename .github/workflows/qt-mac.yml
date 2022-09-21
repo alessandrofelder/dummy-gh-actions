@@ -10,8 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install MacOS dependencies
-        # MacOS already has libxml2 by default
-        if: matrix.platform == 'macos-latest'
         shell: bash
         run: |
           brew install qt5 --with-developer

@@ -12,4 +12,7 @@ jobs:
       - name: Install MacOS dependencies
         shell: bash
         run: |
-          brew install qt5 --with-developer
+          brew install qt5
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3

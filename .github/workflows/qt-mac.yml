@@ -8,11 +8,14 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Install MacOS dependencies
-        shell: bash
-        run: |
-          brew install qt5
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          aqtversion: '==2.1.*'
+          version: '5.14.2'
+          host: 'mac'
+          target: 'desktop'
+          arch: 'clang_64'
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
